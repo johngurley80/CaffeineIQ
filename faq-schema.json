@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much caffeine is safe per day?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most healthy adults can safely consume up to 400mg of caffeine per day — roughly four 8oz cups of brewed coffee — according to the FDA. Your personal limit scales with bodyweight (approximately 5.7mg per kg) and drops if you are pregnant or breastfeeding (cap of 200mg). Older adults clear caffeine more slowly so the practical limit is lower."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is caffeine half-life?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Caffeine half-life is the time it takes your body to clear half of the caffeine in your bloodstream. For most adults this is about 5 hours, meaning 200mg of caffeine consumed at noon will still leave roughly 100mg in your system at 5pm and 50mg at 10pm."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does caffeine stay in your system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Detectable caffeine can stay in your system for up to 10 hours after consumption. To avoid sleep disruption, aim to have less than 50mg of caffeine remaining in your bloodstream by bedtime — most people need to stop caffeine 6 to 9 hours before bed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What time should I stop drinking coffee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Stop drinking caffeine when there are enough hours before bedtime for your body to clear it below the 50mg sleep-quality threshold. For 200mg of caffeine and an 11pm bedtime, that means a cut-off around 2pm. The CaffeineIQ calculator computes your exact cut-off based on your dose and target bedtime."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does caffeine affect sleep quality?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Even when caffeine doesn't prevent you from falling asleep, residual caffeine reduces deep sleep and REM sleep. Studies show 200mg of caffeine taken 6 hours before bed can cut total sleep by an hour. Treating bedtime as a target and working backwards from there is the most effective way to protect sleep quality."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much water should I drink if I drink coffee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add roughly 150ml of water for every caffeinated drink, on top of your baseline (body weight in kg × 0.033 litres). A 70kg adult drinking 3 coffees should aim for around 2.8 litres of total fluid that day. Mild dehydration amplifies caffeine jitters and reduces tolerance."
+      }
+    }
+  ]
+}

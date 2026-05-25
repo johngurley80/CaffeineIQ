@@ -1,65 +1,114 @@
 import Image from "next/image";
+import faqSchema from "@/faq-schema.json";
+import { Icon } from "@/components/icons/Icon";
+import { ToolGrid } from "@/components/tools/ToolGrid";
+import { AdSenseSlot } from "@/components/ui/AdSenseSlot";
+import { AffiliateCard } from "@/components/ui/AffiliateCard";
+import { Footer } from "@/components/ui/Footer";
+import { HeroBadge } from "@/components/ui/HeroBadge";
+import { HowItWorksStep } from "@/components/ui/HowItWorksStep";
+import { NavBar } from "@/components/ui/NavBar";
+import { StatStrip } from "@/components/ui/StatStrip";
+
+const navLinks = [
+  { label: "Calculator", href: "/#calculator" },
+  { label: "How it works", href: "/how-it-works" },
+  { label: "Blog", href: "/blog" },
+];
+
+const footerLinks = [
+  { label: "About", href: "/about" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Blog", href: "/blog" },
+];
 
 export default function Home() {
+  const questions = faqSchema.mainEntity;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+    <>
+      <NavBar links={navLinks} cta={{ label: "Start free", href: "/#calculator" }} />
+      <main>
+        <section className="mx-auto grid max-w-wrap gap-12 px-wrap-sm py-hero-sm md:px-wrap md:py-hero">
+          <div className="max-w-[820px]">
+            <HeroBadge>Know your limit. Own your energy.</HeroBadge>
+            <h1 className="mt-7 font-display text-[clamp(40px,6vw,76px)] font-normal leading-[0.95] text-text-primary">
+              Your personalised <em className="text-accent">caffeine</em> calculator.
+            </h1>
+            <p className="mt-6 max-w-[650px] text-[clamp(16px,1.6vw,19px)] leading-relaxed text-text-secondary">
+              Find your safe daily limit, your cut-off time, your sleep debt, and your hydration target - in 30 seconds.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-2">
+              {["No signup", "Free forever", "Calibrated"].map((pill) => (
+                <span key={pill} className="inline-flex items-center gap-2 rounded-[999px] border border-border bg-surface px-3 py-1.5 text-label font-medium text-text-secondary">
+                  <Icon name="check" className="h-3.5 w-3.5 text-accent" />
+                  {pill}
+                </span>
+              ))}
+            </div>
+          </div>
+          <ToolGrid />
+        </section>
+
+        <section className="mx-auto max-w-wrap px-wrap-sm py-section-sm md:px-wrap md:py-section">
+          <div className="mb-8 max-w-[620px]">
+            <p className="text-eyebrow font-semibold uppercase tracking-widest text-text-tertiary">How it works</p>
+            <h2 className="mt-3 font-display text-[clamp(34px,4.2vw,48px)] leading-[1.05] text-text-primary">
+              Four signals, one practical recommendation.
+            </h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-3">
+            <HowItWorksStep number="01" icon={<Icon name="cup" />} title="Find your ceiling" body="Weight, age, and pregnancy status set a conservative daily caffeine limit." />
+            <HowItWorksStep number="02" icon={<Icon name="clock" />} title="Protect bedtime" body="Half-life math works backwards from your target sleep time to set a cut-off." />
+            <HowItWorksStep number="03" icon={<Icon name="leaf" />} title="Balance recovery" body="Sleep debt and hydration show when caffeine is covering a deeper deficit." />
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-wrap px-wrap-sm pb-section-sm md:px-wrap md:pb-section">
+          <StatStrip
+            headline="Used by focused people who want clean energy without borrowing from tomorrow."
+            stats={[
+              { value: "12,438", label: "limits checked" },
+              { value: "3.2h", label: "average earlier cut-off" },
+              { value: "486k", label: "mg planned" },
+            ]}
+          />
+          <AdSenseSlot slot="home-mid" />
+          <div className="grid gap-5 md:grid-cols-2">
+            <AffiliateCard
+              category="Recovery tracking"
+              title="Track the habits caffeine hides."
+              body="A simple wearable or sleep tracker can reveal whether your extra cup is solving energy or masking recovery debt."
+              ctaText="See tracker picks"
+              ctaHref="https://example.com/recovery"
+              imageSlot={<Image src="/affiliate-tracker.svg" alt="" width={96} height={96} />}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            <AffiliateCard
+              category="Hydration"
+              title="Make water the default."
+              body="A measured bottle turns your target into a visible scoreboard, especially on high-caffeine days."
+              ctaText="See bottle picks"
+              ctaHref="https://example.com/hydration"
+              imageSlot={<Image src="/affiliate-bottle.svg" alt="" width={96} height={96} />}
+            />
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-[860px] px-wrap-sm pb-section-sm md:px-wrap md:pb-section">
+          <h2 className="font-display text-[clamp(34px,4.2vw,48px)] leading-[1.05] text-text-primary">Caffeine calculator FAQ</h2>
+          <div className="mt-7 divide-y divide-border rounded-2xl border border-border bg-surface shadow-card">
+            {questions.map((item) => (
+              <details key={item.name} className="group p-5">
+                <summary className="cursor-pointer list-none text-base font-semibold text-text-primary">
+                  {item.name}
+                </summary>
+                <p className="mt-3 text-body leading-relaxed text-text-secondary">{item.acceptedAnswer.text}</p>
+              </details>
+            ))}
+          </div>
+        </section>
       </main>
-    </div>
+      <Footer links={footerLinks} />
+    </>
   );
 }

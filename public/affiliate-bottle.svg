@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Hydration bottle">
+  <rect width="160" height="160" rx="18" fill="#f5f1ea"/>
+  <path d="M62 34h36l-5 18v76a16 16 0 0 1-16 16 16 16 0 0 1-16-16V52l1-18Z" fill="#1e2d4a"/>
+  <path d="M66 78h28v48a14 14 0 0 1-14 14 14 14 0 0 1-14-14V78Z" fill="#faf7f2"/>
+  <path d="M69 92h22M69 110h22" stroke="#3d1f0d" stroke-width="4" stroke-linecap="round"/>
+</svg>
