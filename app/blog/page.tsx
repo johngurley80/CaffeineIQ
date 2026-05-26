@@ -1,30 +1,43 @@
 import Link from "next/link";
-import { getAllBlogPosts } from "@/lib/blog";
+import { getAllPosts } from "@/lib/blog";
 import { Footer } from "@/components/ui/Footer";
 import { NavBar } from "@/components/ui/NavBar";
 
 export const metadata = {
-  title: "Caffeine Guides",
-  description: "Practical caffeine, sleep, and hydration guides from CaffeineIQ.",
+  title: "Caffeine Guides | CaffeineIQ",
+  description: "Evidence-based guides to caffeine, sleep, and energy — from half-life to tolerance resets.",
 };
 
 export default function BlogIndex() {
-  const posts = getAllBlogPosts();
+  const posts = getAllPosts();
 
   return (
     <>
-      <NavBar links={[{ label: "Calculator", href: "/#calculator" }, { label: "Blog", href: "/blog" }]} cta={{ label: "Start free", href: "/#calculator" }} />
-      <main className="mx-auto max-w-wrap px-wrap-sm py-section-sm md:px-wrap md:py-section">
-        <h1 className="font-display text-[clamp(40px,6vw,76px)] leading-[0.95] text-text-primary">Caffeine guides.</h1>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`} className="rounded-2xl border border-border bg-surface p-6 shadow-card">
-              <p className="font-mono text-[12px] uppercase tracking-wide text-text-tertiary">{post.readingTime} min read</p>
-              <h2 className="mt-3 font-display text-[30px] leading-tight text-text-primary">{post.title}</h2>
-              <p className="mt-3 text-body leading-relaxed text-text-secondary">{post.metaDescription}</p>
-            </Link>
-          ))}
-        </div>
+      <NavBar links={[{ label: "Calculator", href: "/#calculator" }, { label: "Guides", href: "/blog" }]} />
+      <main className="min-h-screen bg-[#faf7f2]">
+        <section className="mx-auto max-w-wrap px-6 py-16 md:px-wrap md:py-24">
+          <div className="max-w-[720px]">
+            <h1 className="font-display text-[clamp(44px,6vw,76px)] leading-[0.95] text-[#1c1917]">Caffeine Guides</h1>
+            <p className="mt-4 font-ui text-[18px] leading-relaxed text-[#78716c]">
+              Evidence-based guides to caffeine, sleep, and energy.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {posts.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="rounded-lg border border-[#e8e0d5] bg-[#ffffff] p-6 shadow-sm transition-shadow hover:shadow-card"
+              >
+                <h2 className="font-display text-[30px] leading-tight text-[#1c1917]">{post.title}</h2>
+                <p className="mt-3 overflow-hidden font-ui text-body leading-relaxed text-[#78716c] [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]">
+                  {post.description}
+                </p>
+                <p className="mt-5 font-ui text-[13px] text-[#a8a29e]">{post.readingTime}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
       </main>
       <Footer links={[{ label: "About", href: "/about" }, { label: "Privacy", href: "/privacy" }]} />
     </>

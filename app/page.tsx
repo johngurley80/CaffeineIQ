@@ -12,13 +12,13 @@ import { StatStrip } from "@/components/ui/StatStrip";
 const navLinks = [
   { label: "Calculator", href: "/#calculator" },
   { label: "How it works", href: "/how-it-works" },
-  { label: "Blog", href: "/blog" },
+  { label: "Guides", href: "/blog" },
 ];
 
 const footerLinks = [
   { label: "About", href: "/about" },
   { label: "Privacy", href: "/privacy" },
-  { label: "Blog", href: "/blog" },
+  { label: "Guides", href: "/blog" },
 ];
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <>
-      <NavBar links={navLinks} cta={{ label: "Start free", href: "/#calculator" }} />
+      <NavBar links={navLinks} />
       <main>
         <section className="mx-auto grid max-w-wrap gap-12 px-wrap-sm py-hero-sm md:px-wrap md:py-hero">
           <div className="max-w-[820px]">

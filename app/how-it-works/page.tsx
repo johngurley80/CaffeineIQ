@@ -11,7 +11,7 @@ export const metadata = {
 export default function HowItWorksPage() {
   return (
     <>
-      <NavBar links={[{ label: "Calculator", href: "/#calculator" }, { label: "Blog", href: "/blog" }]} cta={{ label: "Start free", href: "/#calculator" }} />
+      <NavBar links={[{ label: "Calculator", href: "/#calculator" }, { label: "Guides", href: "/blog" }]} />
       <main className="mx-auto max-w-wrap px-wrap-sm py-section-sm md:px-wrap md:py-section">
         <h1 className="max-w-[760px] font-display text-[clamp(40px,6vw,72px)] leading-[0.95] text-text-primary">The calculator turns caffeine into a daily plan.</h1>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
