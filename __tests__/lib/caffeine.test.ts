@@ -1,15 +1,25 @@
 import { describe, expect, it } from "vitest";
-import { getCutoffTime, getDailyLimit, getDecayCurve } from "@/lib/caffeine";
+import { getCutoffTime, getDailyLimit, getDecayCurve, poundsToKg } from "@/lib/caffeine";
 
 describe("caffeine", () => {
-  it("calculates age-adjusted daily limits", () => {
-    expect(getDailyLimit(72, "25-34", false)).toBe(400);
-    expect(getDailyLimit(60, "55+", false)).toBe(270);
-    expect(getDailyLimit(90, "18-24", false)).toBe(400);
+  it("calculates weight-based daily limits", () => {
+    expect(getDailyLimit(70, false, [])).toBe(399);
+    expect(getDailyLimit(80, false, [])).toBe(400);
   });
 
   it("caps pregnancy or breastfeeding at 200mg", () => {
-    expect(getDailyLimit(90, "18-24", true)).toBe(200);
+    expect(getDailyLimit(70, true, [])).toBe(200);
+  });
+
+  it("applies health condition caps", () => {
+    expect(getDailyLimit(70, false, ["hypertension"])).toBe(200);
+    expect(getDailyLimit(70, false, ["anxiety"])).toBe(200);
+    expect(getDailyLimit(70, false, ["kidney_disease"])).toBe(150);
+    expect(getDailyLimit(70, true, ["kidney_disease"])).toBe(150);
+  });
+
+  it("converts pounds to kilograms for the limit formula", () => {
+    expect(getDailyLimit(poundsToKg(154), false, [])).toBe(399);
   });
 
   it("calculates cut-off time from bedtime and dose", () => {

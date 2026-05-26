@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans, IBM_Plex_Mono, Instrument_Serif } from "next/font/google";
 import Script from "next/script";
 import faqSchema from "@/faq-schema.json";
+import { CookieNotice } from "@/components/ui/CookieNotice";
 import "./globals.css";
 
 const display = Instrument_Serif({
@@ -26,14 +27,19 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID;
+const shouldLoadGa = Boolean(GA_ID && GA_ID !== "G-XXXXXXXXXX");
+const shouldLoadClarity = Boolean(CLARITY_PROJECT_ID && CLARITY_PROJECT_ID !== "XXXXXXXXXX");
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://caffeineiq.com"),
   title: {
-    default: "Caffeine Calculator - Personal Daily Limit & Cut-Off Time | CaffeineIQ",
+    default: "Caffeine Calculator — Find Your Personal Daily Limit & Cut-Off Time | CaffeineIQ",
     template: "%s | CaffeineIQ",
   },
   description:
-    "Free personalised caffeine calculator. Find your safe daily caffeine limit, cut-off time, sleep debt, and hydration target in 30 seconds.",
+    "Free personalised caffeine calculator. Enter your weight and bedtime to find your safe daily caffeine limit, exact cut-off time, sleep debt, and hydration target.",
   keywords: [
     "caffeine calculator",
     "caffeine half life calculator",
@@ -67,6 +73,39 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className={`${display.variable} ${ui.variable} ${mono.variable}`}>
       <body className="bg-bg text-text-primary font-ui antialiased">
+        {/* Add these IDs manually in Vercel project environment variables. */}
+        {shouldLoadGa && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="afterInteractive" />
+            <Script
+              id="ga4-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_ID}');
+                `,
+              }}
+            />
+          </>
+        )}
+        {shouldLoadClarity && (
+          <Script
+            id="microsoft-clarity"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                })(window, document, "clarity", "script", "${CLARITY_PROJECT_ID}");
+              `,
+            }}
+          />
+        )}
         <Script
           id="faq-schema"
           type="application/ld+json"
@@ -88,6 +127,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           }}
         />
         {children}
+        <CookieNotice />
       </body>
     </html>
   );

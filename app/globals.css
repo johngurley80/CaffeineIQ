@@ -4,7 +4,7 @@
 :root {
   color-scheme: light;
   background: #faf7f2;
-  color: #1e2d4a;
+  color: #1c1917;
 }
 
 * {
@@ -19,7 +19,7 @@ body {
   min-height: 100vh;
   margin: 0;
   background: #faf7f2;
-  color: #1e2d4a;
+  color: #1c1917;
 }
 
 .max-w-wrap {
@@ -76,12 +76,12 @@ button {
   font-size: 2rem;
   line-height: 1.08;
   font-weight: 400;
-  color: #1e2d4a;
+  color: #1c1917;
 }
 
 .blog-prose p,
 .blog-prose li {
-  color: #6b6b6b;
+  color: #78716c;
   font-size: 16px;
   line-height: 1.7;
 }
@@ -102,5 +102,5 @@ button {
 
 .blog-prose th {
   background: #f5f1ea;
-  color: #1e2d4a;
+  color: #1c1917;
 }

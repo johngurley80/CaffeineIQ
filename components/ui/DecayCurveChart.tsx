@@ -38,6 +38,20 @@ export function DecayCurveChart({ lastCoffeeTime, mgConsumed, bedtime }: DecayCu
         <line x1="0" x2="280" y1={thresholdY} y2={thresholdY} stroke="#c4622d" strokeDasharray="4 4" strokeWidth="1" />
         <line x1="280" x2="280" y1="6" y2="66" stroke="#a8a29e" strokeDasharray="3 4" strokeWidth="1" />
       </svg>
+      <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-[10px] text-text-tertiary">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-px w-4 bg-accent" />
+          caffeine in system
+        </span>
+        <span className="inline-flex items-center gap-1.5 text-warning">
+          <span className="h-px w-4 border-t border-dashed border-warning" />
+          50mg sleep threshold
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-3 w-px border-l border-dashed border-text-tertiary" />
+          bedtime
+        </span>
+      </div>
     </div>
   );
 }

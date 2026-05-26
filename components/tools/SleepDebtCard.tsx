@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDebouncedTrackEvent } from "@/hooks/useDebouncedTrackEvent";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { classifyDebt, getSleepDebt } from "@/lib/sleep";
 import { CircularGauge } from "@/components/ui/CircularGauge";
 import { ToolCard } from "@/components/ui/ToolCard";
@@ -8,19 +10,25 @@ import { Slider } from "@/components/ui/form/Slider";
 
 type SleepDebtCardProps = {
   onDebtChange: (debt: number) => void;
+  expanded: boolean;
+  onExpandedChange: (expanded: boolean) => void;
+  singleColumnMode: boolean;
 };
 
 const days = ["M", "T", "W", "T", "F", "S", "S"];
 
-export function SleepDebtCard({ onDebtChange }: SleepDebtCardProps) {
-  const [target, setTarget] = useState(8);
-  const [hours, setHours] = useState([7, 7.5, 6.5, 7, 6, 8, 8]);
+export function SleepDebtCard({ onDebtChange, expanded, onExpandedChange, singleColumnMode }: SleepDebtCardProps) {
+  const [target, setTarget] = useLocalStorage("ciq_sleep_target", 8);
+  const [hours, setHours] = useLocalStorage("ciq_sleep_hours", [7, 7.5, 6.5, 7, 6, 8, 8]);
   const debt = getSleepDebt(hours, target);
   const tone = classifyDebt(debt);
+  const hoursKey = hours.join("|");
 
   useEffect(() => {
     onDebtChange(debt);
   }, [debt, onDebtChange]);
+
+  useDebouncedTrackEvent([target, hoursKey], "calculate_sleep_debt", "tool", "sleep_debt");
 
   return (
     <ToolCard
@@ -30,8 +38,12 @@ export function SleepDebtCard({ onDebtChange }: SleepDebtCardProps) {
       outputValue={debt.toFixed(debt % 1 ? 1 : 0)}
       outputUnit="h"
       outputTone={tone === "ok" ? "accent" : tone}
-      gauge={<CircularGauge value={Math.min(debt, 10)} max={10} label={tone} sublabel="risk" color={tone === "ok" ? "#3d1f0d" : "#c4622d"} />}
+      outputClassName={debt > 5 ? "text-[#b91c1c]" : debt >= 2 ? "text-warning" : "text-accent"}
+      gauge={<CircularGauge value={Math.min(debt, 10)} max={10} label={tone} sublabel="risk" color={debt > 5 ? "#b91c1c" : tone === "ok" ? "#3d1f0d" : "#c4622d"} />}
       caption="Seven-day shortage versus your target sleep duration."
+      expanded={expanded}
+      onExpandedChange={onExpandedChange}
+      singleColumnMode={singleColumnMode}
     >
       <Slider label="Sleep target" value={target} min={6} max={9} step={0.5} unit="h" onChange={setTarget} />
       <div className="grid grid-cols-7 gap-1.5">

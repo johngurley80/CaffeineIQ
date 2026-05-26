@@ -1,4 +1,3 @@
-import Image from "next/image";
 import faqSchema from "@/faq-schema.json";
 import { Icon } from "@/components/icons/Icon";
 import { ToolGrid } from "@/components/tools/ToolGrid";
@@ -58,7 +57,7 @@ export default function Home() {
             </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3">
-            <HowItWorksStep number="01" icon={<Icon name="cup" />} title="Find your ceiling" body="Weight, age, and pregnancy status set a conservative daily caffeine limit." />
+            <HowItWorksStep number="01" icon={<Icon name="cup" />} title="Find your ceiling" body="Weight, pregnancy status, and health flags set a conservative daily caffeine limit." />
             <HowItWorksStep number="02" icon={<Icon name="clock" />} title="Protect bedtime" body="Half-life math works backwards from your target sleep time to set a cut-off." />
             <HowItWorksStep number="03" icon={<Icon name="leaf" />} title="Balance recovery" body="Sleep debt and hydration show when caffeine is covering a deeper deficit." />
           </div>
@@ -67,11 +66,6 @@ export default function Home() {
         <section className="mx-auto max-w-wrap px-wrap-sm pb-section-sm md:px-wrap md:pb-section">
           <StatStrip
             headline="Used by focused people who want clean energy without borrowing from tomorrow."
-            stats={[
-              { value: "12,438", label: "limits checked" },
-              { value: "3.2h", label: "average earlier cut-off" },
-              { value: "486k", label: "mg planned" },
-            ]}
           />
           <AdSenseSlot slot="home-mid" />
           <div className="grid gap-5 md:grid-cols-2">
@@ -81,7 +75,6 @@ export default function Home() {
               body="A simple wearable or sleep tracker can reveal whether your extra cup is solving energy or masking recovery debt."
               ctaText="See tracker picks"
               ctaHref="https://example.com/recovery"
-              imageSlot={<Image src="/affiliate-tracker.svg" alt="" width={96} height={96} />}
             />
             <AffiliateCard
               category="Hydration"
@@ -89,7 +82,6 @@ export default function Home() {
               body="A measured bottle turns your target into a visible scoreboard, especially on high-caffeine days."
               ctaText="See bottle picks"
               ctaHref="https://example.com/hydration"
-              imageSlot={<Image src="/affiliate-bottle.svg" alt="" width={96} height={96} />}
             />
           </div>
         </section>

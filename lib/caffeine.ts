@@ -1,33 +1,30 @@
 // lib/caffeine.ts
 // Pure functions for caffeine math. No side effects, no dependencies.
 
-export type AgeRange = '18-24' | '25-34' | '35-44' | '45-54' | '55+';
-
 /**
  * Personalised safe daily caffeine ceiling, in mg.
  *
- * Model: ~5.7 mg per kg of bodyweight (FDA aligned, conservative).
- * Older bands get a downward modifier (slower clearance).
- * Hard caps: 400mg overall, 200mg if pregnant/breastfeeding.
- *
- * Rounded to nearest 10mg for display.
+ * Model: 5.7 mg per kg of bodyweight with condition-specific caps.
  */
 export function getDailyLimit(
   weightKg: number,
-  age: AgeRange,
-  pregnant: boolean,
+  isPregnant: boolean,
+  healthConditions: string[],
 ): number {
-  if (pregnant) return 200;
-  const factor: Record<AgeRange, number> = {
-    '18-24': 6.0,
-    '25-34': 5.8,
-    '35-44': 5.5,
-    '45-54': 5.0,
-    '55+': 4.5,
-  };
-  const raw = weightKg * factor[age];
-  const capped = Math.min(400, raw);
-  return Math.round(capped / 10) * 10;
+  const base = weightKg * 5.7;
+  let limit = Math.min(base, 400);
+
+  if (isPregnant) limit = 200;
+
+  if (healthConditions.includes("hypertension")) limit = Math.min(limit, 200);
+  if (healthConditions.includes("anxiety")) limit = Math.min(limit, 200);
+  if (healthConditions.includes("kidney_disease")) limit = Math.min(limit, 150);
+
+  return Math.round(limit);
+}
+
+export function poundsToKg(weightLbs: number): number {
+  return Math.round(weightLbs * 0.453592);
 }
 
 /**

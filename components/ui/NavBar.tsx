@@ -23,7 +23,7 @@ export function NavBar({ links, cta }: NavBarProps) {
             </Link>
           ))}
           {cta && (
-            <Link href={cta.href} className="rounded-xs border border-accent bg-accent px-[14px] py-2 text-body font-semibold text-text-on-accent hover:border-accent-hover hover:bg-accent-hover">
+            <Link href={cta.href} className="rounded-xs border border-accent bg-accent px-[14px] py-2 text-body font-semibold text-[#faf7f2] hover:border-accent-hover hover:bg-accent-hover">
               {cta.label}
             </Link>
           )}
