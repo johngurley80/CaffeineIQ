@@ -34,6 +34,7 @@ type DrinkLogEntry = {
 const drinkList = drinks as Drink[];
 const ML_PER_OZ = 29.5735;
 const MAX_SERVING_ML = 2000;
+const MAX_CAFFEINE_MG = 2000;
 
 function calculateCaffeineMg(drink: Drink, servingMl: number) {
   return Math.round((drink.caffeine_per_100ml / 100) * servingMl);
@@ -75,6 +76,8 @@ export function CutoffTimeCard({
   const [currentTime, setCurrentTime] = useState("00:00");
   const [addDisabled, setAddDisabled] = useState(false);
   const [drinkLogTimestamps, setDrinkLogTimestamps] = useState<Record<number, string>>({});
+  const [customDrinkName, setCustomDrinkName] = useState("");
+  const [customCaffeineMg, setCustomCaffeineMg] = useState(0);
   const addLockedRef = useRef(false);
   const [selectedDrinkName, setSelectedDrinkName] = useLocalStorage("ciq_drink_name", "");
   const [drinkLog, setDrinkLog] = useLocalStorage<DrinkLogEntry[]>("ciq_drink_log", []);
@@ -158,6 +161,16 @@ export function CutoffTimeCard({
     updateServingMl(parsed, selectedUnit === "g" ? "ml" : servingUnit, selectedDrink);
   };
 
+  const updateCustomCaffeine = (nextValue: string) => {
+    if (nextValue.trim() === "") {
+      setCustomCaffeineMg(0);
+      return;
+    }
+    const parsed = Number(nextValue);
+    if (!Number.isFinite(parsed)) return;
+    setCustomCaffeineMg(Math.min(MAX_CAFFEINE_MG, Math.max(0, Math.round(parsed))));
+  };
+
   const addDrinkToToday = () => {
     if (!selectedDrink || addLockedRef.current) return;
     addLockedRef.current = true;
@@ -181,11 +194,35 @@ export function CutoffTimeCard({
     }, 500);
   };
 
+  const addCustomDrinkToToday = () => {
+    const name = customDrinkName.trim();
+    if (!name || customCaffeineMg <= 0 || addLockedRef.current) return;
+    addLockedRef.current = true;
+    setAddDisabled(true);
+    const id = Date.now();
+    const nextEntry = {
+      id,
+      name,
+      servingMl: 0,
+      caffeineMg: customCaffeineMg,
+      time: lastCoffeeTime,
+    };
+    setDrinkLog([nextEntry, ...drinkLog].slice(0, 8));
+    setDrinkLogTimestamps((current) => ({ ...current, [id]: lastCoffeeTime }));
+    setCaffeineConsumed(caffeineConsumed + customCaffeineMg);
+    setDrinksCount(drinksCount + 1);
+    trackEvent("add_custom_drink", "tool", "cutoff_time", customCaffeineMg);
+    window.setTimeout(() => {
+      addLockedRef.current = false;
+      setAddDisabled(false);
+    }, 500);
+  };
+
   return (
     <ToolCard
       title="Your cut-off time"
       badge="5h half-life"
-      badgeTooltip="Caffeine has a 5-hour half-life. Your cut-off is the last time you could have a drink and still have under 50mg in your system at bedtime — the threshold where most people can sleep normally."
+      badgeTooltip="Caffeine has a 5-hour half-life. Your cut-off is the last time you could have a drink and still have under 50mg in your system at bedtime - the threshold where most people can sleep normally."
       outputValue={cutoff}
       outputTone="accent"
       outputSize="large"
@@ -205,6 +242,40 @@ export function CutoffTimeCard({
           setMgConsumed(calculateCaffeineMg(drink, drink.default_serving_ml));
         }}
       />
+      <div className="grid gap-3 rounded-sm border border-border bg-surface-muted p-3">
+        <p className="text-body font-medium text-text-secondary">Custom drink</p>
+        <label className="grid gap-2 text-body font-medium text-text-secondary">
+          Drink name
+          <input
+            type="text"
+            value={customDrinkName}
+            placeholder="e.g. Homemade iced coffee"
+            onChange={(event) => setCustomDrinkName(event.currentTarget.value)}
+            className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-ui text-body text-text-primary focus:border-ink/45 focus:outline-none"
+          />
+        </label>
+        <label className="grid gap-2 text-body font-medium text-text-secondary">
+          Caffeine amount (mg)
+          <input
+            type="number"
+            value={String(customCaffeineMg)}
+            min={0}
+            max={MAX_CAFFEINE_MG}
+            step={1}
+            onFocus={(event) => event.currentTarget.select()}
+            onChange={(event) => updateCustomCaffeine(event.currentTarget.value)}
+            className="w-full rounded-sm border border-border bg-surface px-3 py-2.5 font-ui text-body text-text-primary focus:border-ink/45 focus:outline-none"
+          />
+        </label>
+        <button
+          type="button"
+          className="rounded-xs border border-accent bg-accent px-[14px] py-2 text-body font-semibold text-[#faf7f2] hover:border-accent-hover hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
+          onClick={addCustomDrinkToToday}
+          disabled={addDisabled || !customDrinkName.trim() || customCaffeineMg <= 0}
+        >
+          Add custom drink
+        </button>
+      </div>
       {selectedDrink && (
         <div className="grid gap-2">
           <div className="flex items-center justify-between gap-3">
@@ -241,8 +312,8 @@ export function CutoffTimeCard({
             />
           </label>
           <p className="font-mono text-[11px] uppercase tracking-wide text-text-tertiary">
-            {selectedDrink.name} · {servingAmount}
-            {selectedUnit} serving · {calculatedMg}mg caffeine
+            {selectedDrink.name} - {servingAmount}
+            {selectedUnit} serving - {calculatedMg}mg caffeine
           </p>
           <TimeInput label="Drink time" value={lastCoffeeTime} onChange={setLastCoffeeTime} />
           <button
@@ -275,11 +346,11 @@ export function CutoffTimeCard({
           <div className="grid gap-1">
             {drinkLog.map((entry) => (
               <div key={entry.id} className="text-body text-text-secondary">
-                {entry.name} · <span className="font-mono text-text-primary">{entry.caffeineMg}mg</span>
+                {entry.name} - <span className="font-mono text-text-primary">{entry.caffeineMg}mg</span>
                 {(entry.time ?? drinkLogTimestamps[entry.id]) && (
                   <>
                     {" "}
-                    · <span className="font-mono text-text-primary">{entry.time ?? drinkLogTimestamps[entry.id]}</span>
+                    - <span className="font-mono text-text-primary">{entry.time ?? drinkLogTimestamps[entry.id]}</span>
                   </>
                 )}
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import drinks from "@/data/drinks.json";
 
 export type Drink = {
@@ -28,15 +28,24 @@ function unitLabel(drink: Drink) {
 export function DrinkCombobox({ selectedName, onSelect }: DrinkComboboxProps) {
   const [query, setQuery] = useState(selectedName);
   const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
     const normalised = query.trim().toLowerCase();
     if (!normalised) return drinkList.slice(0, 12);
     return drinkList.filter((drink) => drink.name.toLowerCase().includes(normalised)).slice(0, 12);
   }, [query]);
+  useEffect(() => {
+    function closeOnOutsideClick(event: MouseEvent) {
+      if (!wrapperRef.current?.contains(event.target as Node)) setOpen(false);
+    }
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
+  }, []);
 
   return (
-    <div className="relative grid gap-2">
+    <div ref={wrapperRef} className="relative grid gap-2">
       <label className="text-body font-medium text-text-secondary" htmlFor="drink-search">
         Drink lookup
       </label>
@@ -88,7 +97,7 @@ export function DrinkCombobox({ selectedName, onSelect }: DrinkComboboxProps) {
               </button>
             ))
           ) : (
-            <div className="px-3 py-2 text-body text-text-secondary">No drinks found. Enter caffeine manually below.</div>
+            <p className="px-3 py-2 text-body text-text-secondary">No drinks found.</p>
           )}
         </div>
       )}

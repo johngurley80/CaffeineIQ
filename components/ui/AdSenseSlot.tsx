@@ -34,7 +34,7 @@ export function AdSenseSlot({ slot }: AdSenseSlotProps) {
   }, [isProduction, slot]);
 
   return (
-    <div className="relative my-8 grid min-h-[180px] place-items-center rounded-xl border border-dashed border-border bg-surface-muted/60 text-[11px] uppercase tracking-widest text-text-tertiary">
+    <div className={isProduction ? "relative min-h-0" : "relative my-8 grid min-h-[180px] place-items-center rounded-xl border border-dashed border-border bg-surface-muted/60 text-[11px] uppercase tracking-widest text-text-tertiary"}>
       {!isProduction ? (
         <span>Ad</span>
       ) : (

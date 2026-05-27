@@ -80,7 +80,7 @@ export function InsightStrip({
 
   return (
     <aside className="mt-[22px]">
-      <div className="flex flex-col gap-4 rounded-md bg-accent px-[22px] py-[18px] shadow-card md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 rounded-md border-l-[3px] border-l-[#c4622d] bg-accent px-[22px] py-5 shadow-card md:flex-row md:items-center md:justify-between">
         <p className="text-[18px] font-medium leading-snug text-[#faf7f2]">{text}</p>
         {showSleepCta && (
           <a

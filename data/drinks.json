@@ -685,6 +685,11 @@
     "default_serving_ml": 330
   },
   {
+    "name": "Coca-Cola Classic / Original 330ml",
+    "caffeine_per_100ml": 10.3,
+    "default_serving_ml": 330
+  },
+  {
     "name": "Coca-Cola 500ml",
     "caffeine_per_100ml": 9.6,
     "default_serving_ml": 500

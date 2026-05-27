@@ -5,7 +5,9 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { trackEvent } from "@/lib/analytics";
 import { poundsToKg } from "@/lib/caffeine";
 import { InsightStrip } from "@/components/ui/InsightStrip";
+import { Icon } from "@/components/icons/Icon";
 import { CutoffTimeCard } from "@/components/tools/CutoffTimeCard";
+import { CaffeineLookupCard } from "@/components/tools/CaffeineLookupCard";
 import { DailyLimitCard } from "@/components/tools/DailyLimitCard";
 import { SleepDebtCard } from "@/components/tools/SleepDebtCard";
 import { WaterTargetCard } from "@/components/tools/WaterTargetCard";
@@ -40,56 +42,130 @@ export function ToolGrid() {
     },
     [setCardExpanded],
   );
+  const handleAiLookupAdd = useCallback(
+    (drink: { name: string; caffeineMg: number; servingSize: string }) => {
+      setCaffeineConsumed(caffeineConsumed + drink.caffeineMg);
+      setDrinksCount(drinksCount + 1);
+
+      try {
+        const currentLog = JSON.parse(window.localStorage.getItem("ciq_drink_log") || "[]");
+        window.localStorage.setItem(
+          "ciq_drink_log",
+          JSON.stringify([
+            {
+              id: Date.now(),
+              name: drink.name,
+              servingMl: 0,
+              caffeineMg: drink.caffeineMg,
+              time: new Date().toTimeString().slice(0, 5),
+            },
+            ...currentLog,
+          ].slice(0, 8)),
+        );
+      } catch {
+        // If localStorage is unavailable, the total counters still update.
+      }
+    },
+    [caffeineConsumed, drinksCount, setCaffeineConsumed, setDrinksCount],
+  );
 
   return (
     <div id="calculator">
       {/* TODO: mobile layout — stack cards vertically, collapse inputs
       by default, sticky insight strip at bottom */}
-      <div
-        className={
-          anyExpanded
-            ? "flex flex-col gap-5 transition-all duration-200 ease-in-out"
-            : "grid items-start gap-5 transition-all duration-200 ease-in-out min-[760px]:grid-cols-2"
-        }
-      >
-        <DailyLimitCard
-          weight={weightRaw}
-          setWeight={setWeightRaw}
-          weightKg={weightKg}
-          weightUnit={weightUnit}
-          setWeightUnit={setWeightUnit}
-          caffeineConsumed={caffeineConsumed}
-          onLimitChange={handleLimit}
-          expanded={expandedCards[0]}
-          onExpandedChange={(expanded) => handleCardExpanded(0, "daily_limit", expanded)}
-          singleColumnMode={anyExpanded}
-        />
-        <CutoffTimeCard
-          caffeineConsumed={caffeineConsumed}
-          setCaffeineConsumed={setCaffeineConsumed}
-          drinksCount={drinksCount}
-          setDrinksCount={setDrinksCount}
-          onCutoffChange={handleCutoff}
-          expanded={expandedCards[1]}
-          onExpandedChange={(expanded) => handleCardExpanded(1, "cutoff_time", expanded)}
-          singleColumnMode={anyExpanded}
-        />
-        <SleepDebtCard
-          onDebtChange={handleDebt}
-          expanded={expandedCards[2]}
-          onExpandedChange={(expanded) => handleCardExpanded(2, "sleep_debt", expanded)}
-          singleColumnMode={anyExpanded}
-        />
-        <WaterTargetCard
-          weight={weightKg}
-          drinks={drinksCount}
-          setDrinks={setDrinksCount}
-          onWaterChange={handleWater}
-          expanded={expandedCards[3]}
-          onExpandedChange={(expanded) => handleCardExpanded(3, "water_target", expanded)}
-          singleColumnMode={anyExpanded}
-        />
+      <div className={anyExpanded ? "flex flex-col gap-5 transition-all duration-200 ease-in-out" : "grid items-start gap-5 transition-all duration-200 ease-in-out min-[760px]:grid-cols-2"}>
+        {anyExpanded ? (
+          <>
+            <DailyLimitCard
+              weight={weightRaw}
+              setWeight={setWeightRaw}
+              weightKg={weightKg}
+              weightUnit={weightUnit}
+              setWeightUnit={setWeightUnit}
+              caffeineConsumed={caffeineConsumed}
+              onLimitChange={handleLimit}
+              expanded={expandedCards[0]}
+              onExpandedChange={(expanded) => handleCardExpanded(0, "daily_limit", expanded)}
+              singleColumnMode={anyExpanded}
+            />
+            <CaffeineLookupCard dailyLimit={dailyLimit} caffeineConsumed={caffeineConsumed} onAddDrink={handleAiLookupAdd} />
+            <CutoffTimeCard
+              caffeineConsumed={caffeineConsumed}
+              setCaffeineConsumed={setCaffeineConsumed}
+              drinksCount={drinksCount}
+              setDrinksCount={setDrinksCount}
+              onCutoffChange={handleCutoff}
+              expanded={expandedCards[1]}
+              onExpandedChange={(expanded) => handleCardExpanded(1, "cutoff_time", expanded)}
+              singleColumnMode={anyExpanded}
+            />
+            <SleepDebtCard
+              onDebtChange={handleDebt}
+              expanded={expandedCards[2]}
+              onExpandedChange={(expanded) => handleCardExpanded(2, "sleep_debt", expanded)}
+              singleColumnMode={anyExpanded}
+            />
+            <WaterTargetCard
+              weight={weightKg}
+              drinks={drinksCount}
+              setDrinks={setDrinksCount}
+              onWaterChange={handleWater}
+              expanded={expandedCards[3]}
+              onExpandedChange={(expanded) => handleCardExpanded(3, "water_target", expanded)}
+              singleColumnMode={anyExpanded}
+            />
+          </>
+        ) : (
+          <>
+            <div className="grid gap-5">
+              <DailyLimitCard
+                weight={weightRaw}
+                setWeight={setWeightRaw}
+                weightKg={weightKg}
+                weightUnit={weightUnit}
+                setWeightUnit={setWeightUnit}
+                caffeineConsumed={caffeineConsumed}
+                onLimitChange={handleLimit}
+                expanded={expandedCards[0]}
+                onExpandedChange={(expanded) => handleCardExpanded(0, "daily_limit", expanded)}
+                singleColumnMode={anyExpanded}
+              />
+              <CaffeineLookupCard dailyLimit={dailyLimit} caffeineConsumed={caffeineConsumed} onAddDrink={handleAiLookupAdd} />
+              <SleepDebtCard
+                onDebtChange={handleDebt}
+                expanded={expandedCards[2]}
+                onExpandedChange={(expanded) => handleCardExpanded(2, "sleep_debt", expanded)}
+                singleColumnMode={anyExpanded}
+              />
+            </div>
+            <div className="grid gap-5">
+              <CutoffTimeCard
+                caffeineConsumed={caffeineConsumed}
+                setCaffeineConsumed={setCaffeineConsumed}
+                drinksCount={drinksCount}
+                setDrinksCount={setDrinksCount}
+                onCutoffChange={handleCutoff}
+                expanded={expandedCards[1]}
+                onExpandedChange={(expanded) => handleCardExpanded(1, "cutoff_time", expanded)}
+                singleColumnMode={anyExpanded}
+              />
+              <WaterTargetCard
+                weight={weightKg}
+                drinks={drinksCount}
+                setDrinks={setDrinksCount}
+                onWaterChange={handleWater}
+                expanded={expandedCards[3]}
+                onExpandedChange={(expanded) => handleCardExpanded(3, "water_target", expanded)}
+                singleColumnMode={anyExpanded}
+              />
+            </div>
+          </>
+        )}
       </div>
+      <p className="mt-3 flex items-center gap-2 text-left text-[12px] leading-snug text-text-tertiary">
+        <Icon name="lock" className="h-3.5 w-3.5" />
+        No personal data is stored on our servers
+      </p>
       <div className="mt-4 flex flex-col gap-3 rounded-md border border-border bg-surface px-4 py-3 text-body text-text-secondary shadow-pill sm:flex-row sm:items-center sm:justify-between">
         <p>Your calculator inputs are saved only in this browser. CaffeineIQ does not send or store them on a server.</p>
         <button

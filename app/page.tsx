@@ -56,10 +56,11 @@ export default function Home() {
               Four signals, one practical recommendation.
             </h2>
           </div>
-          <div className="grid gap-5 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-4">
             <HowItWorksStep number="01" icon={<Icon name="cup" />} title="Find your ceiling" body="Weight, pregnancy status, and health flags set a conservative daily caffeine limit." />
             <HowItWorksStep number="02" icon={<Icon name="clock" />} title="Protect bedtime" body="Half-life math works backwards from your target sleep time to set a cut-off." />
             <HowItWorksStep number="03" icon={<Icon name="leaf" />} title="Balance recovery" body="Sleep debt and hydration show when caffeine is covering a deeper deficit." />
+            <HowItWorksStep number="04" icon={<Icon name="drop" />} title="Stay hydrated" body="Caffeine is a mild diuretic. Your water target adjusts automatically based on how many drinks you log." />
           </div>
         </section>
 
@@ -91,7 +92,7 @@ export default function Home() {
           <div className="mt-7 divide-y divide-border rounded-2xl border border-border bg-surface shadow-card">
             {questions.map((item) => (
               <details key={item.name} className="group p-5">
-                <summary className="cursor-pointer list-none text-base font-semibold text-text-primary">
+                <summary className="cursor-pointer list-none text-base font-normal text-text-primary">
                   {item.name}
                 </summary>
                 <p className="mt-3 text-body leading-relaxed text-text-secondary">{item.acceptedAnswer.text}</p>

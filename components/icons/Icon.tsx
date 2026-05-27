@@ -1,4 +1,4 @@
-type IconName = "cup" | "clock" | "moon" | "spark" | "arrow" | "check" | "ring" | "leaf";
+type IconName = "cup" | "clock" | "moon" | "spark" | "arrow" | "check" | "ring" | "leaf" | "drop" | "lock";
 
 type IconProps = {
   name: IconName;
@@ -53,6 +53,13 @@ export function Icon({ name, className = "h-4 w-4" }: IconProps) {
         <>
           <path d="M5 19c9 0 14-5 14-14-9 0-14 5-14 14Z" />
           <path d="M5 19 15 9" />
+        </>
+      )}
+      {name === "drop" && <path d="M12 3.5s6 6.5 6 11A6 6 0 0 1 6 14.5c0-4.5 6-11 6-11Z" />}
+      {name === "lock" && (
+        <>
+          <rect x="6.5" y="10.5" width="11" height="9" rx="2" />
+          <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
         </>
       )}
     </svg>
